@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 3.3 - ระบบคำนวณค่าไฟฟ้าอัตราก้าวหน้า</title>
+</head>
+<body>
+
+<div class="container">
+    <h2></h2> ระบบคำนวณค่าไฟฟ้าอัตราก้าวหน้า</h2>
+    
+    <div class="form-group">
+        <label for="units">จำนวนหน่วยไฟฟ้าที่ใช้ (Unit):</label>
+        <input type="number" id="units" placeholder="ระบุหน่วยไฟฟ้า เช่น 180" min="0" required>
+    </div>
+
+    <div class="form-group">
+        <label for="ftRate">ค่า Ft (บาท/หน่วย):</label>
+        <input type="number" id="ftRate" value="0.3972" step="0.0001">
+    </div>
+
+    <div class="form-group">
+        <label for="serviceCharge">ค่าบริการรายเดือน (บาท):</label>
+        <input type="number" id="serviceCharge" value="8.19" step="0.01">
+    </div>
+
+    <button onclick="calculateElectricityBill()">คำนวณค่าไฟฟ้าสุทธิ</button>
+
+    <div class="result-box" id="resultBox">
+        <h3 class="result-title"> สรุปรายละเอียดผลการคำนวณ</h3>
+        
+        <table id="detailsTable">
+            <thead>
+                <tr>
+                    <th>ช่วงหน่วยที่</th>
+                    <th>จำนวนหน่วย</th>
+                    <th>อัตรา (บาท)</th>
+                    <th class="text-right">รวมเป็นเงิน</th>
+                </tr>
+            </thead>
+            <tbody id="detailsBody">
+            </tbody>
+        </table>
+
+        <div id="breakdownText" style="line-height: 1.6; font-size: 14px; color: #4e342e;">
+        </div>
+        
+        <div class="total-highlight" id="grandTotalText"></div>
+    </div>
+</div>
+
+<script>
+    function calculateElectricityBill() {
+        const unitsInput = document.getElementById('units').value;
+        if (unitsInput === "" || parseFloat(unitsInput) < 0) {
+            alert("กรุณากรอกจำนวนหน่วยไฟฟ้าให้ถูกต้องและมากกว่าหรือเท่ากับ 0");
+            return;
+        }
+
+        const totalUnits = parseFloat(unitsInput);
+        const ftRate = parseFloat(document.getElementById('ftRate').value) || 0;
+        const serviceCharge = parseFloat(document.getElementById('serviceCharge').value) || 0;
+
+        // กำหนดอัตราก้าวหน้าประเภท 1.1 (บ้านอยู่อาศัย อัตราปกติ)
+        const brackets = [
+            { limit: 15, rate: 2.3488, label: "15 หน่วยแรก (0 - 15)" },
+            { limit: 10, rate: 2.9882, label: "10 หน่วยต่อไป (16 - 25)" },
+            { limit: 10, rate: 3.2405, label: "10 หน่วยต่อไป (26 - 35)" },
+            { limit: 65, rate: 3.6237, label: "65 หน่วยต่อไป (36 - 100)" },
+            { limit: 50, rate: 3.7171, label: "50 หน่วยต่อไป (101 - 150)" },
+            { limit: 250, rate: 4.2233, label: "250 หน่วยต่อไป (151 - 400)" },
+            { limit: Infinity, rate: 4.4217, label: "เกินกว่า 400 หน่วยขึ้นไป (401+)" }
+        ];
+
+        let remainingUnits = totalUnits;
+        let baseTariff = 0; // ค่าไฟฟ้าฐานสะสม
+        let tableRowsHTML = "";
+
+        // วนลูปคำนวณตามขั้นบันได (Progressive Calculation)
+        for (let i = 0; i < brackets.length; i++) {
+            const bracket = brackets[i];
+            if (remainingUnits <= 0) break;
+
+            let unitsInThisBracket = 0;
+            if (remainingUnits > bracket.limit) {
+                unitsInThisBracket = bracket.limit;
+                remainingUnits -= bracket.limit;
+            } else {
+                unitsInThisBracket = remainingUnits;
+                remainingUnits = 0;
+            }
+
+            const costInThisBracket = unitsInThisBracket * bracket.rate;
+            baseTariff += costInThisBracket;
+
+            tableRowsHTML += `
+                <tr>
+                    <td>${bracket.label}</td>
+                    <td>${unitsInThisBracket.toFixed(2)}</td>
+                    <td>${bracket.rate.toFixed(4)}</td>
+                    <td class="text-right">${costInThisBracket.toFixed(2)} บาท</td>
+                </tr>
+            `;
+        }
+
+        // คำนวณค่า FT และค่าบริการรวมถึงภาษีมูลค่าเพิ่ม
+        const totalFt = totalUnits * ftRate;
+        const subtotal = baseTariff + totalFt + serviceCharge;
+        const vat = subtotal * 0.07;
+        const grandTotal = subtotal + vat;
+
+        // อัปเดตตารางรายละเอียดขั้นบันได
+        document.getElementById('detailsBody').innerHTML = tableRowsHTML;
+
+        // อัปเดตข้อความรายละเอียดการเงิน
+        document.getElementById('breakdownText').innerHTML = `
+            <div><strong>1. ค่าไฟฟ้าฐาน:</strong> ${baseTariff.toFixed(2)} บาท</div>
+            <div><strong>2. ค่าบริการรายเดือน:</strong> ${serviceCharge.toFixed(2)} บาท</div>
+            <div><strong>3. ค่า Ft (${totalUnits.toFixed(2)} หน่วย x ${ftRate.toFixed(4)} บาท):</strong> ${totalFt.toFixed(2)} บาท</div>
+            <div style="border-top: 1px dashed #ffe082; margin: 8px 0; padding-top: 8px;"><strong>รวมเงินก่อนภาษี (Subtotal):</strong> ${subtotal.toFixed(2)} บาท</div>
+            <div><strong>ภาษีมูลค่าเพิ่ม 7% (VAT):</strong> ${vat.toFixed(2)} บาท</div>
+        `;
+
+        // แสดงยอดเงินสุทธิ
+        document.getElementById('grandTotalText').innerHTML = `
+            ยอดรวมค่าไฟฟ้าสุทธิ: ${grandTotal.toLocaleString('th-TH', {minimumFractionDigits: 2, maximumFractionDigits: 2})} บาท
+        `;
+
+        // สั่งแสดงผล Result Box
+        document.getElementById('resultBox').style.display = 'block';
+    }
+</script>
+
+</body>
+</html>
