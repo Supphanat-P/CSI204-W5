@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>เลือกสินค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex items-center justify-center p-6">
+    <div class="w-full max-w-lg bg-white rounded-2xl shadow-xl p-8">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">เลือกสินค้า</h2>
+
+        <label class="block  font-medium mb-2">รายการสินค้า</label>
+        <select id="product" onchange="changePrice()"
+            class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            <option value="10000" class="bg-gray-100">มะละกอ - 10000 บาท</option>
+            <option value="2000" class="bg-gray-100">กล้วย - 2000 บาท</option>
+            <option value="30000" class="bg-gray-100">ส้่ม - 30000 บาท</option>
+            <option value="20" class="bg-gray-100">ดาบเลเซอร์ - 20 บาท</option>
+        </select>
+
+        <label class="block  font-medium mb-2">ราคา</label>
+        <input type="number" id="price" value="1000" readonly
+            class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+        <label class="block  font-medium mb-2">จำนวน</label>
+        <input type="number" id="qty" value="1"
+            class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+        <button onclick="saveData()"
+            class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg mt-4">
+            เพิ่มลงตะกร้า
+        </button>
+    </div>
+
+    </div>
+
+    <script>
+        function changePrice() {
+            document.getElementById("price").value = document.getElementById("product").value;
+        }
+
+        function saveData() {
+            sessionStorage.setItem("product", document.getElementById("product").options[document.getElementById("product").selectedIndex].text);
+            sessionStorage.setItem("price", document.getElementById("price").value);
+            sessionStorage.setItem("qty", document.getElementById("qty").value);
+
+            alert("Product added to cart");
+            window.location = "lab4_2b.html";
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>3.1: ฟอร์มคำนวณสินเชื่อบ้าน</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex items-center justify-center p-6">
+
+
+      <form class="bg-white rounded-2xl shadow-xl p-8">
+
+            <h1 class="text-3xl font-bold text-center mb-6">
+                  คำนวณสินเชื่อบ้าน
+            </h1>
+
+            <label class="block mb-2 font-semibold text-gray-700">Monthly Salary:</label>
+            <input id="salary" type="text" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+            <br>
+
+            <label class="block mb-2 font-semibold text-gray-700">Loan Amount:</label>
+            <input id="loanAmount" type="text" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+            <br>
+
+            <label class="block mb-2 font-semibold text-gray-700">Interest Rate (%):</label>
+            <input id="interestRate" type="text" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+            <br>
+
+            <label class="block mb-2 font-semibold text-gray-700">Years:</label>
+            <input id="years" type="number" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+            <br>
+
+            <button type="button" onclick="calculateLoan()"
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition">
+                  Calculate
+            </button>
+
+      </form>
+
+      <div id="result" class="mt-6 bg-white rounded-2xl shadow-xl p-6 m-4 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-5">
+                  สรุปสินเชื่อบ้าน
+            </h2>
+
+            <div class="space-y-3">
+
+                  <div class="flex justify-between border-b pb-2">
+                        <span>วงเงินกู้</span>
+                        <span class="font-semibold">0 บาท</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                        <span>อัตราดอกเบี้ย</span>
+                        <span class="font-semibold">0% ต่อปี</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                        <span>ระยะเวลา</span>
+                        <span class="font-semibold">0 ปี (0 เดือน)</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                        <span>ค่างวดต่อเดือน</span>
+                        <span class="font-semibold">0.00 บาท</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                        <span>ยอดชำระรวม</span>
+                        <span class="font-semibold">0.00 บาท</span>
+                  </div>
+
+                  <div class="rounded-lg p-4 mt-4 flex justify-between text-lg font-bold">
+                        <span>ดอกเบี้ยรวม</span>
+                        <span>0.00 บาท</span>
+                  </div>
+
+            </div>
+      </div>
+
+</body>
+<script>
+      function calculateLoan() {
+            let monthlySalary = parseFloat(document.getElementById("salary").value);
+            let loanAmount = parseFloat(document.getElementById("loanAmount").value);
+            let interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            let years = parseInt(document.getElementById("years").value);
+            let months = years * 12;
+
+            let maxLoan = monthlySalary * 200;
+            if (loanAmount > maxLoan) {
+                  alert(`วงเงินกู้สูงสุดคือ ${maxLoan.toFixed(2)} บาท (200 เท่าของเงินเดือน)`);
+                  return;
+            }
+            let monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, months)) /
+                  (Math.pow(1 + interestRate, months) - 1);
+
+            if (isNaN(monthlyPayment) || !isFinite(monthlyPayment)) {
+                  monthlyPayment = loanAmount / months;
+            }
+
+            document.getElementById("result").innerHTML = `
+                  <h2 class="text-2xl font-bold mb-5">
+                  สรุปสินเชื่อบ้าน
+                  </h2>
+
+                  <div class="space-y-3">
+
+                  <div class="flex justify-between border-b pb-2">
+                  <span>วงเงินกู้</span>
+                  <span class="font-semibold">${loanAmount.toLocaleString()} บาท</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                  <span>อัตราดอกเบี้ย</span>
+                  <span class="font-semibold">${(interestRate * 1200).toFixed(2)}% ต่อปี</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                  <span>ระยะเวลา</span>
+                  <span class="font-semibold">${years} ปี (${months} เดือน)</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                  <span>ค่างวดต่อเดือน</span>
+                  <span class="font-semibold">${monthlyPayment.toLocaleString(undefined, { maximumFractionDigits: 2 })} บาท</span>
+                  </div>
+
+                  <div class="flex justify-between border-b pb-2">
+                  <span>ยอดชำระรวม</span>
+                  <span class="font-semibold">${(monthlyPayment * months).toLocaleString(undefined, { maximumFractionDigits: 2 })} บาท</span>
+                  </div>
+
+                  <div class="rounded-lg p-4 mt-4 flex justify-between text-lg font-bold">
+                  <span>ดอกเบี้ยรวม</span>
+                  <span>${(monthlyPayment * months - loanAmount).toLocaleString(undefined, { maximumFractionDigits: 2 })} บาท</span>
+                  </div>
+
+                  </div>
+            `;
+      }
+</script>
+
+</html>

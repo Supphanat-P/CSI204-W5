@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lab5_2 ระบบคำนวณค่าส่ง</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex justify-center items-center p-6">
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-xl">
+        <h2 class="text-2xl font-bold text-center mb-6">ระบบคำนวณค่าส่ง</h2>
+
+        <label for="price" class="block font-medium mb-2">ราคาสินค้า</label>
+        <input type="number" id="price"
+            class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+
+        <label for="shipping" class="block font-medium mb-2">เลือกการจัดส่ง</label>
+        <select id="shipping" class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            <option value="15">ธรรมดา (15)</option>
+            <option value="30">ลงทะเบียน (30)</option>
+            <option value="50">EMS (50)</option>
+        </select>
+
+        <button onclick="calculate()"
+            class="mt-6 w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg">
+            คำนวณ
+        </button>
+
+        <h3 id="result" class="mt-6 text-lg font-bold">
+            <div class="bg-green-100 rounded-xl p-5 space-y-2">
+
+                <div class="flex justify-between">
+                    <span>ราคาสินค้า</span>
+                    <span>0 บาท</span>
+                </div>
+
+                <div class="flex justify-between">
+                    <span>ค่าจัดส่ง</span>
+                    <span>0 บาท</span>
+                </div>
+
+                <div class="flex justify-between text-lg font-bold border-t pt-2">
+                    <span>ราคาที่ต้องชำระ</span>
+                    <span>0 บาท</span>
+                </div>
+
+            </div>
+        </h3>
+    </div>
+
+    <script>
+        function calculate() {
+            let price = Number(document.getElementById("price").value);
+            let shipping = Number(document.getElementById("shipping").value);
+            if (price >= 500) {
+                shipping = 0;
+            }
+            let total = price + shipping;
+            console.log(`Price: ${price}, Shipping: ${shipping}, Total: ${total}`);
+            document.getElementById("result").innerHTML = `
+                <div class="bg-green-100 rounded-xl p-5 space-y-2">
+
+                    <div class="flex justify-between">
+                        <span>ราคาสินค้า</span>
+                        <span>${price.toLocaleString()} บาท</span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>ค่าจัดส่ง</span>
+                        <span>${shipping.toLocaleString()} บาท</span>
+                    </div>
+
+                    <div class="flex justify-between text-lg font-bold border-t pt-2">
+                        <span>ราคาที่ต้องชำระ</span>
+                        <span>${total.toLocaleString()} บาท</span>
+                    </div>
+
+                </div>
+                `
+        }
+    </script>
+</body>
+
+</html>

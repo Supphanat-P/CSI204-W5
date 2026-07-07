@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6.1 ระบบแปลงหน่วย</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex justify-center items-center p-6">
+
+    <div class="bg-white rounded-2xl shadow-xl p-8 w-full max-w-md">
+
+        <h1 class="text-3xl font-bold text-center mb-6">
+            ระบบแปลงหน่วย
+        </h1>
+
+        <label class="block mb-2 font-semibold">ค่าที่ต้องการแปลง</label>
+        <input id="value" type="number" class="w-full border rounded-lg p-3 mb-4">
+
+        <label class="block mb-2 font-semibold">เลือกประเภทการแปลง</label>
+
+        <select id="type" class="w-full border rounded-lg p-3 mb-5">
+
+            <option value="kgTolb">กิโลกรัม → ปอนด์</option>
+            <option value="cToF">เซลเซียส → ฟาเรนไฮต์</option>
+            <option value="kmToMi">กิโลเมตร → ไมล์</option>
+
+        </select>
+
+        <button onclick="convertUnit()"
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg">
+            แปลงหน่วย
+        </button>
+
+        <div id="result" class="mt-6"></div>
+
+    </div>
+
+    <script>
+
+        function convertUnit() {
+
+            let value = parseFloat(document.getElementById("value").value);
+            let type = document.getElementById("type").value;
+
+            let res = 0;
+
+            switch (type) {
+
+                case "kgTolb":
+                    res = value * 2.20462;
+                    document.getElementById("result").innerHTML = `${value} กิโลกรัม = ${res.toFixed(2)} ปอนด์`;
+                    break;
+
+                case "cToF":
+                    res = (value * 9 / 5) + 32;
+                    document.getElementById("result").innerHTML = `${value} °C = ${res.toFixed(2)} °F`;
+                    break;
+
+                case "kmToMi":
+                    res = value * 0.621371;
+                    document.getElementById("result").innerHTML = `${value} กิโลเมตร = ${res.toFixed(2)} ไมล์`;
+                    break;
+
+                default:
+                    document.getElementById("result").innerHTML = "กรุณาเลือกประเภทการแปลง";
+                    break;
+            }
+        }
+
+    </script>
+
+</body>
+
+</html>

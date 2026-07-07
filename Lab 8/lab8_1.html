@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>8.1</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen p-6 flex justify-center items-center">
+
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-3xl">
+
+        <h1 class="text-3xl font-bold text-center mb-6">
+            ระบบคำนวณตารางการผ่อนชำระ
+        </h1>
+
+        <div class="space-y-5">
+
+            <div>
+                <label class="block mb-2 font-semibold ">
+                    จำนวนเงินกู้ (บาท)
+                </label>
+                <input id="loanAmount" type="number" required
+                    class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            </div>
+
+            <div>
+                <label class="block mb-2 font-semibold ">
+                    อัตราดอกเบี้ยต่อปี (%)
+                </label>
+                <input id="interestRate" type="number" required
+                    class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            </div>
+
+            <div>
+                <label class="block mb-2 font-semibold ">
+                    จำนวนงวด (เดือน)
+                </label>
+                <input id="months" type="number" required
+                    class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            </div>
+
+            <button onclick="genAmortizationTable()"
+                class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg">
+                คำนวณตารางการผ่อนชำระ
+            </button>
+
+        </div>
+
+        <div id="amortizationTable" class="mt-6"></div>
+        <div id="summary" class="mt-6"></div>
+
+    </div>
+</body>
+<script>
+    const genAmortizationTable = () => {
+        let loanAmount = parseFloat(document.getElementById("loanAmount").value);
+        let interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+        let months = parseInt(document.getElementById("months").value);
+        let remaining = loanAmount;
+        let monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, months)) /
+            (Math.pow(1 + interestRate, months) - 1);
+
+        let tableHtml = `<table border="1"><tr><th class="px-4 py-2 bg-gray-200">งวดที่</th><th class="px-4 py-2 bg-gray-200">ดอกเบี้ย</th><th class="px-4 py-2 bg-gray-200">เงินต้น</th><th class="px-4 py-2 bg-gray-200">ยอดคงเหลือ</th></tr>`;
+        let remainingBalance = loanAmount;
+        let totalPrincipal = 0;
+        for (let i = 1; i <= months; i++) {
+            let interest = remaining * interestRate;
+            let principal = monthlyPayment - interest;
+            remaining -= principal;
+            totalPrincipal += principal;
+
+            tableHtml += `<tr><td class="px-4 py-2">${i}</td><td class="px-4 py-2">${interest.toFixed(2)}</td><td class="px-4 py-2">${principal.toFixed(2)}</td><td class="px-4 py-2">${remaining.toFixed(2)}</td></tr>`;
+        }
+        tableHtml += `</table>`;
+
+        document.getElementById("amortizationTable").innerHTML = tableHtml;
+        document.getElementById("summary").innerHTML = `
+            <p class="text-lg font-semibold mb-2">ค่างวดต่อเดือน: ${monthlyPayment.toFixed(2)} บาท</p>
+            <p class="text-lg font-semibold mb-2">รวมเงินที่ต้องชำระ: ${(monthlyPayment * months).toFixed(2)} บาท</p>
+            <p class="text-lg font-semibold">ดอกเบี้ยรวม: ${totalPrincipal.toFixed(2)} บาท</p>
+        `;
+    };
+</script>
+
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Lab 6.2 ระบบกรองข้อมูลสินค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen p-6 flex justify-center items-center">
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-3xl">
+        <h2 class="text-3xl font-bold text-center mb-6">
+            ระบบกรองข้อมูลสินค้า
+        </h2>
+        <select id="category" onchange="filterProduct()" class="w-full border rounded-lg p-3 mb-5">
+            <option value="ทั้งหมด">ทั้งหมด</option>
+            <option value="เสื้อผ้า">เสื้อผ้า</option>
+            <option value="อุปกรณ์">อุปกรณ์</option>
+            <option value="อาหาร">อาหาร</option>
+        </select>
+
+        <table class="w-full border-collapse rounded-lg border border-gray-300">
+            <thead class="bg-blue-600 text-white">
+                <tr class="text-left">
+                    <th class="border border-gray-300 px-4 py-2">ชื่อสินค้า</th>
+                    <th class="border border-gray-300 px-4 py-2">หมวดหมู่</th>
+                    <th class="border border-gray-300 px-4 py-2">ราคา</th>
+                    <th class="border border-gray-300 px-4 py-2">สต็อก</th>
+                </tr>
+            </thead>
+            <tbody id="productTable" class="text-gray-700">
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const products = [
+            {
+                name: "เสื้อยืด",
+                category: "เสื้อผ้า",
+                price: 250,
+                stock: 20
+            },
+            {
+                name: "กางเกง",
+                category: "เสื้อผ้า",
+                price: 450,
+                stock: 10
+            },
+            {
+                name: "เมาส์",
+                category: "อุปกรณ์",
+                price: 600,
+                stock: 15
+            },
+            {
+                name: "คีย์บอร์ด",
+                category: "อุปกรณ์",
+                price: 1200,
+                stock: 8
+            },
+            {
+                name: "ข้าวสาร",
+                category: "อาหาร",
+                price: 180,
+                stock: 50
+            },
+            {
+                name: "นม",
+                category: "อาหาร",
+                price: 35,
+                stock: 40
+            }
+        ];
+
+        function showData(data) {
+            let html = "";
+            data.forEach(function (item) {
+                html += `
+                <tr class="hover:bg-blue-50">
+
+                    <td class="border border-gray-300 px-4 py-2">
+                        ${item.name}
+                    </td>
+
+                    <td class="border border-gray-300 px-4 py-2">
+                        ${item.category}
+                    </td>
+
+                    <td class="border border-gray-300 px-4 py-2 text-right">
+                        ${item.price.toLocaleString()} บาท
+                    </td>
+
+                    <td class="border border-gray-300 px-4 py-2 text-center">
+                        ${item.stock}
+                    </td>
+
+                </tr>
+            `;
+            });
+            document.getElementById("productTable").innerHTML = html;
+        }
+
+        function filterProduct() {
+            let category = document.getElementById("category").value;
+            let result = [];
+
+            if (category == "ทั้งหมด") {
+                result = products;
+            }
+            else if (category == "เสื้อผ้า") {
+                result = products.filter(product => product.category == "เสื้อผ้า");
+            }
+            else if (category == "อุปกรณ์") {
+                result = products.filter(product => product.category == "อุปกรณ์");
+            }
+            else if (category == "อาหาร") {
+                result = products.filter(product => product.category == "อาหาร");
+            }
+
+            showData(result);
+        }
+
+        showData(products);
+    </script>
+</body>
+
+</html>

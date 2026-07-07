@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 6.2 ระบบคำนวณราคาสินค้า</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex justify-center items-center p-6">
+
+    <div class="bg-white shadow-xl rounded-2xl p-8 w-full max-w-3xl">
+
+        <h1 class="text-3xl font-bold text-center mb-6">
+            รายการสินค้า
+        </h1>
+
+        <table class="w-full border-collapse border border-gray-300">
+
+            <thead class="bg-blue-600 text-white">
+
+                <tr>
+                    <th class="border px-4 py-2">ชื่อสินค้า</th>
+                    <th class="border px-4 py-2">หมวดหมู่</th>
+                    <th class="border px-4 py-2">จำนวน</th>
+                    <th class="border px-4 py-2">ราคา (บาท)</th>
+                </tr>
+
+            </thead>
+
+            <tbody id="productTable"></tbody>
+
+        </table>
+
+        <div id="summary" class="mt-6 bg-green-100 rounded-xl p-5"></div>
+
+    </div>
+
+    <script>
+
+        const products = [
+            { name: "Keyboard", category: "อุปกรณ์", price: 1200, qty: 1 },
+            { name: "Mouse", category: "อุปกรณ์", price: 600, qty: 2 },
+            { name: "Monitor", category: "อุปกรณ์", price: 4500, qty: 1 },
+            { name: "Headset", category: "อุปกรณ์", price: 900, qty: 3 },
+            { name: "Webcam", category: "อุปกรณ์", price: 1500, qty: 1 }
+        ];
+
+        function showProducts() {
+
+            let html = "";
+
+            products.forEach(product => {
+
+                html += `
+                <tr class="hover:bg-blue-50">
+
+                    <td class="border px-4 py-2">${product.name}</td>
+
+                    <td class="border px-4 py-2">${product.category}</td>
+
+                    <td class="border px-4 py-2 text-center">${product.qty}</td>
+
+                    <td class="border px-4 py-2 text-right">
+                        ${(product.price * product.qty).toLocaleString()}
+                    </td>
+
+                </tr>
+                `;
+
+            });
+
+            document.getElementById("productTable").innerHTML = html;
+
+        }
+
+        function calculateTotal() {
+
+            const totalPrice = products.reduce((sum, product) => {
+                return sum + (product.price * product.qty);
+            }, 0);
+
+            let discount = 0;
+
+            if (totalPrice > 10000) {
+                discount = totalPrice * 0.10;
+            }
+            else if (totalPrice > 5000) {
+                discount = totalPrice * 0.05;
+            }
+
+            const finalPrice = totalPrice - discount;
+
+            document.getElementById("summary").innerHTML = `
+                <div class="space-y-2">
+
+                    <div class="flex justify-between">
+                        <span>ราคารวม</span>
+                        <span>${totalPrice.toLocaleString()} บาท</span>
+                    </div>
+
+                    <div class="flex justify-between">
+                        <span>ส่วนลด</span>
+                        <span>${discount.toLocaleString()} บาท</span>
+                    </div>
+
+                    <div class="flex justify-between border-t pt-3 text-xl font-bold text-green-700">
+                        <span>ราคาสุทธิ</span>
+                        <span>${finalPrice.toLocaleString()} บาท</span>
+                    </div>
+
+                </div>
+            `;
+        }
+
+        showProducts();
+        calculateTotal();
+
+    </script>
+
+</body>
+
+</html>

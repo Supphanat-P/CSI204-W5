@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+      <script src="https://cdn.tailwindcss.com"></script>
+
+      <title>3.2: ฟอร์มคำนวณสินเชื่อรถยนต์</title>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex items-center justify-center p-6">
+      <form class="bg-white rounded-2xl shadow-xl p-8">
+
+            <label class="block mb-2 font-semibold text-gray-700">Car Price:</label>
+            <input id="carPrice" type="text" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            <br>
+
+            <label class="block mb-2 font-semibold text-gray-700">Down Payment:</label>
+            <input id="downPayment" type="text" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            <br>
+
+            <label class="block mb-2 font-semibold text-gray-700">Interest Rate:</label>
+            <input id="interestRate" type="text" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            <br>
+
+            <label class="block mb-2 font-semibold text-gray-700">Months:</label>
+            <input id="months" type="number" required
+                  class="w-full border rounded-lg p-3 focus:ring-2 focus:ring-blue-400 outline-none">
+            <br><br>
+
+            <button type="button" onclick="calculateLoan()"
+                  class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg transition duration-300">
+                  Submit
+            </button>
+
+      </form>
+
+      <div id="paymentTable" class="p-4">
+      </div>
+</body>
+<script>
+      function calculateLoan() {
+            let carPrice = parseFloat(document.getElementById("carPrice").value);
+            let downPayment = parseFloat(document.getElementById("downPayment").value);
+            let loanAmount = carPrice - downPayment;
+            let interestRate = parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+            let months = parseInt(document.getElementById("months").value);
+
+            let monthlyPayment = (loanAmount * interestRate * Math.pow(1 + interestRate, months)) /
+                  (Math.pow(1 + interestRate, months) - 1);
+
+            let tableHtml = `
+                  <div class="overflow-x-auto">
+                  <table class="min-w-full border border-gray-300 rounded-lg overflow-hidden">
+                  <thead class="bg-blue-600 text-white">
+                  <tr>
+                        <th class="px-4 py-3">งวดที่</th>
+                        <th class="px-4 py-3">ค่างวด</th>
+                        <th class="px-4 py-3">เงินต้น</th>
+                        <th class="px-4 py-3">ดอกเบี้ย</th>
+                        <th class="px-4 py-3">คงเหลือ</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  `;
+            let remaining = loanAmount;
+
+            for (let i = 1; i <= months; i++) {
+                  let interest = remaining * interestRate;
+                  let principal = monthlyPayment - interest;
+                  remaining -= principal;
+
+                  if (i % 6 === 0 || i === months) {
+                        tableHtml += `
+                        <tr class="odd:bg-white even:bg-blue-50 hover:bg-blue-100 text-center">
+                              <td class="border px-4 py-2">${i}</td>
+                              <td class="border px-4 py-2">${monthlyPayment.toFixed(2)}</td>
+                              <td class="border px-4 py-2">${principal.toFixed(2)}</td>
+                              <td class="border px-4 py-2">${interest.toFixed(2)}%</td>
+                              <td class="border px-4 py-2">${Math.max(0, remaining).toFixed(2)}</td>
+                        </tr>
+                        `;
+                  }
+            }
+
+            tableHtml += `
+                        </tbody>
+                  </table>
+                  </div>
+                  `;
+            document.getElementById("paymentTable").innerHTML = tableHtml;
+      }
+</script>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab4_1b : Show localStorage</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen flex items-center justify-center p-6">
+
+    <div class="w-full max-w-lg">
+
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+
+            <h1 class="text-3xl font-bold text-center text-blue-700 mb-2">
+                User Information
+            </h1>
+
+            <div class="space-y-5 mt-6">
+                <div class="flex justify-between border-b pb-2">
+                    <span class="font-semibold text-gray-700">Name:</span>
+                    <p id="displayName" class="text-gray-600""></p>
+                </div>
+
+                <div class=" flex justify-between border-b pb-2">
+                        <span class="font-semibold text-gray-700">Email:</span>
+                    <p id="displayEmail" class="text-gray-600"></p>
+                </div>
+
+                <div class="flex justify-between border-b pb-2">
+                    <span class="font-semibold text-gray-700">Phone:</span>
+                    <p id="displayPhone" class="text-gray-600"></p>
+                </div>
+
+                <div class="flex justify-between border-b pb-2">
+                    <span class="font-semibold text-gray-700">Theme:</span>
+                    <p id="displayTheme" class="text-gray-600"></p>
+                </div>
+            </div>
+            <button onclick="clearData()"
+                class="mt-6 bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+                Clear Data
+            </button>
+
+        </div>
+
+    </div>
+
+    <script>
+        const getData = () => {
+            const user = JSON.parse(localStorage.getItem("userData"));
+            console.log(user);
+            if (!user) {
+                document.getElementById("displayName").textContent = "No data found";
+                document.getElementById("displayEmail").textContent = "No data found";
+                document.getElementById("displayPhone").textContent = "No data found";
+                document.getElementById("displayTheme").textContent = "No data found";
+            } else {
+                document.getElementById("displayName").textContent = user.name || "No name provided";
+                document.getElementById("displayEmail").textContent = user.email || "No email provided";
+                document.getElementById("displayPhone").textContent = user.phone || "No phone provided";
+                document.getElementById("displayTheme").textContent = user.theme || "No theme selected";
+            }
+        };
+        getData();
+        const clearData = () => {
+            localStorage.removeItem("userData");
+            getData();
+        };
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>ตะกร้าสินค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gradient-to-br from-blue-100 via-sky-50 to-cyan-100 min-h-screen p-6">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">ตะกร้าสินค้า</h2>
+
+    <table class="table-auto border-collapse border w-full">
+        <tr>
+            <th class="border border-gray-300 px-4 py-2">สินค้า</th>
+            <th class="border border-gray-300 px-4 py-2">ราคา</th>
+            <th class="border border-gray-300 px-4 py-2">จำนวน</th>
+            <th class="border border-gray-300 px-4 py-2">รวม</th>
+        </tr>
+        <tr>
+            <td id="product" class="border border-gray-300 px-4 py-2"></td>
+            <td id="price" class="border border-gray-300 px-4 py-2"></td>
+            <td id="qty" class="border border-gray-300 px-4 py-2"></td>
+            <td id="total" class="border border-gray-300 px-4 py-2"></td>
+        </tr>
+    </table>
+
+    <button onclick="clearCart()" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg mt-4">
+        ล้างตะกร้า
+    </button>
+
+    <div class="mt-6 bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4" role="alert">
+
+        <div class="info-box">
+            <p><strong>localStorage: </strong>ข้อมูลอยู่จนกว่าจะลบเอง</p>
+            <p><strong>sessionStorage: </strong>ข้อมูลจะหายเมื่อปิด Browser เหมาะกับข้อมูลชั่วคราว เช่น ตะกร้าสินค้า
+            </p>
+        </div>
+    </div>
+
+    <script>
+        let product = sessionStorage.getItem("product");
+        let price = sessionStorage.getItem("price");
+        let qty = sessionStorage.getItem("qty");
+        let total = price * qty;
+
+        document.getElementById("product").innerHTML = product;
+        document.getElementById("price").innerHTML = price;
+        document.getElementById("qty").innerHTML = qty;
+        document.getElementById("total").innerHTML = total + " บาท";
+
+        function clearCart() {
+            sessionStorage.clear();
+            alert("Product removed from cart");
+            window.location = "lab4_2a.html";
+        }
+    </script>
+</body>
+
+</html>
