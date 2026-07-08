@@ -30,7 +30,7 @@
             { id: 2, name: "Bag", price: 1200 },
         ];
 
-        function displayData() {
+        const displayData = () => {
 
             let html = "<table class=\"min-w-full bg-white border border-gray-300\"><tr><th class=\"border border-gray-300 px-4 py-2\">ID</th><th class=\"border border-gray-300 px-4 py-2\">Name</th><th class=\"border border-gray-300 px-4 py-2\">Price</th></tr>";
             products.forEach(p => {
@@ -49,14 +49,14 @@
             let total = products.reduce((sum, p) => sum + p.price, 0);
             html += `<div class="bg-green-100 rounded-xl p-5 space-y-2 mt-4">`;
             html += `<p class="text-lg font-semibold mt-4"><b>ชื่อสินค้า:</b> ${names.join(", ")}</p>`;
-            html += `<p class="text-lg font-semibold"><b>สินค้าราคา > 2000:</b> ${expensive.map(p => p.name).join(", ")}</p>`;
+            html += `<p class="text-lg font-semibold"><b>สินค้าราคามากว่า 2000:</b> ${expensive.map(p => p.name).join(", ")}</p>`;
             html += `<p class="text-lg font-semibold"><b>ราคารวม:</b> ${total} บาท</p>`;
             html += `</div>`;
             document.getElementById("output").innerHTML = html;
         }
 
 
-        function exportJSON() {
+        const exportJSON = () => {
             let jsonData = JSON.stringify(products);
 
             let blob = new Blob([jsonData], { type: "application/json" });
@@ -68,9 +68,10 @@
             a.click();
         }
 
-        function importJSON(event) {
+        const importJSON = (event) => {
             let file = event.target.files[0];
             let reader = new FileReader();
+
 
             reader.onload = function (e) {
                 products = JSON.parse(e.target.result);
