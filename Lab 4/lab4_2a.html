@@ -37,20 +37,36 @@
 
     </div>
 
-    <script>
-        function changePrice() {
-            document.getElementById("price").value = document.getElementById("product").value;
-        }
+<script>
+    // Helper function
+    const $ = (id) => document.getElementById(id);
 
-        function saveData() {
-            sessionStorage.setItem("product", document.getElementById("product").options[document.getElementById("product").selectedIndex].text);
-            sessionStorage.setItem("price", document.getElementById("price").value);
-            sessionStorage.setItem("qty", document.getElementById("qty").value);
+    function changePrice() {
+        const product = $("product");
+        $("price").value = product.options[product.selectedIndex].value;
+    }
 
-            alert("Product added to cart");
-            window.location = "lab4_2b.html";
-        }
-    </script>
+    function saveData() {
+        const product = $("product");
+        const selectedOption = product.options[product.selectedIndex];
+
+        const cart = {
+            product: selectedOption.text,
+            price: $("price").value,
+            qty: $("qty").value
+        };
+
+        Object.entries(cart).forEach(([key, value]) => {
+            sessionStorage.setItem(key, value);
+        });
+
+        alert("Product added to cart");
+        location.href = "lab4_2b.html";
+    }
+
+    // Set initial price when page loads
+    window.onload = changePrice;
+</script>
 </body>
 
 </html>
